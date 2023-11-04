@@ -11,19 +11,19 @@ class Data:
     """_summary_"""
 
     load_dotenv()
-    BASE_URL = os.getenv("BASE_URL")
+    BASE_URL = os.getenv("BASE_URL", "https://d37ci6vzurychx.cloudfront.net/trip-data/")
 
     def __init__(
         self,
-        taxi_type: str,
-        year: str,
-        month: str,
+        taxi_type: str = "green",
+        year: str = "2020",
+        month: str = "01",
         mode: str = "train",
         root_folder: str = "data",
     ) -> None:
         self.taxi_type = taxi_type
-        self.year = year
-        self.month = month
+        self.year = int(year)
+        self.month = int(month)
         self.mode = mode
         self.data_frame = None
         self.data_dict = None
