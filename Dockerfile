@@ -19,7 +19,8 @@ RUN poetry export -f requirements.txt >> requirements.txt
 
 FROM python:3.10.6-slim AS runtime
 WORKDIR /app
-RUN mkdir /app/data/raw /app/data/interim /app/data/processed /app/models 
+RUN mkdir /app/data /app/models
+RUN mkdir /app/data/raw /app/data/interim /app/data/processed
 COPY src/* /app/src/
 COPY training_job.py /app/training_job.py
 COPY --from=builder /app/requirements.txt /app/requirements.txt
