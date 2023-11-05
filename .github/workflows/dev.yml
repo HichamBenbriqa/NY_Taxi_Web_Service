@@ -26,7 +26,7 @@ jobs:
       env:
         ECR_REGISTRY: ${{ steps.login-ecr.outputs.registry }}
         ECR_REPOSITORY: ${{ secrets.REPO_NAME }}
-        IMAGE_TAG: latest
+        IMAGE_TAG: v0
       run: |
         docker build -t $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG .
         docker push $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG
@@ -50,9 +50,10 @@ jobs:
         GITHUB_SHA: ${{ github.sha }}
         ECR_REGISTRY: ${{ steps.login-ecr.outputs.registry }}
         ECR_REPOSITORY: ${{ secrets.REPO_NAME }}
-        IMAGE_TAG: latest
+        IMAGE_TAG: v0
       run: |
-        docker run "$ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG"
+        echo $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG
+        docker run $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG
         python training_job.py
         cat report.txt >> report.md
         cml-send-comment report.md 
