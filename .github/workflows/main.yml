@@ -1,8 +1,8 @@
 name: Training Job
-
 on:
   push:
-    branches: dev
+    branches:
+      - dev   
 env:
   BASE_URL: https://d37ci6vzurychx.cloudfront.net/trip-data/
 
