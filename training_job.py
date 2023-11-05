@@ -1,7 +1,6 @@
 """_summary_
 
 """
-
 import sys
 
 from src.data.make_dataset import Data
