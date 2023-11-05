@@ -66,6 +66,7 @@ jobs:
     
       run: |
         echo $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG
+        docker pull $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG
         docker run $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG
         python training_job.py
         cat report.txt >> report.md
