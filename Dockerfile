@@ -25,7 +25,7 @@ RUN mkdir /app/src/data /app/src/models /app/src/utils
 COPY src/data /app/src/data
 COPY src/models /app/src/models
 COPY src/utils /app/src/utils
-COPY src/config /app/config
+COPY config /app/config
 COPY training_job.py /app/training_job.py
 COPY --from=builder /app/requirements.txt /app/requirements.txt
 RUN pip install --no-cache-dir -r /app/requirements.txt
