@@ -26,7 +26,7 @@ jobs:
       env:
         ECR_REGISTRY: ${{ steps.login-ecr.outputs.registry }}
         ECR_REPOSITORY: ${{ secrets.REPO_NAME }}
-        IMAGE_TAG: v0
+        IMAGE_TAG: v1
       run: |
         docker build -t $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG .
         docker push $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG
@@ -37,6 +37,11 @@ jobs:
     container: docker://dvcorg/cml-py3:latest
     steps:
     - uses: actions/checkout@v2
+    
+    - name: Amazon ECR
+      id: login-ecr
+      uses: aws-actions/amazon-ecr-login@v1
+      
     - name: Start training job
       id: train_job
       env:
@@ -48,16 +53,10 @@ jobs:
         PREFIX: ${{ secrets.PREFIX }}
         IAM_ROLE_NAME: ${{ secrets.IAM_ROLE_NAME }}
         GITHUB_SHA: ${{ github.sha }}
-    
-    - name: Amazon ECR
-      id: login-ecr
-      uses: aws-actions/amazon-ecr-login@v1
-
-    - name: Get ECR registry, repo and image tag from Amazon ECR
-      env:
         ECR_REGISTRY: ${{ steps.login-ecr.outputs.registry }}
         ECR_REPOSITORY: ${{ secrets.REPO_NAME }}
-        IMAGE_TAG: v0
+        IMAGE_TAG: v1
+    
       run: |
         echo $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG
         docker run $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG
