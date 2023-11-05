@@ -49,7 +49,7 @@ jobs:
         IAM_ROLE_NAME: ${{ secrets.IAM_ROLE_NAME }}
         GITHUB_SHA: ${{ github.sha }}
       run: |
-        docker run -it --rm $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG
+        docker run --rm $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG
         python training_job.py
         cat report.txt >> report.md
         cml-send-comment report.md 
