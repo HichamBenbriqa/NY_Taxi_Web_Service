@@ -66,12 +66,12 @@ jobs:
         IMAGE_TAG: v02
     
       run: |
-        docker run $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG python training_job.py cat report.txt >> report.md
+        docker run -v $PWD:/reports -w /reports $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG python training_job.py cat report.txt >> report.md
         docker run $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG ls
   
     - name: Save Markdown Output
       run: |
-        docker cp $(docker ps -lq):report.md ./report.md
+        docker cp $(docker ps -lq):/reports/report.md ./report.md
 
     - name: Print Markdown Output
       run: |
