@@ -37,5 +37,5 @@ report = (f" Training Job Submission Report\n\n"
           )
 print(report)
 # Write metrics to file
-with open('reports/report.txt', 'w') as outfile:
+with open('reports/report.md', 'w') as outfile:
     outfile.write(report)
