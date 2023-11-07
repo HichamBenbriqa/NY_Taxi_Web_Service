@@ -66,4 +66,17 @@ jobs:
         IMAGE_TAG: v01
     
       run: |
-        docker run $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG python training_job.py cat report.txt >> report.md cml-send-comment report.md 
+        docker run $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG python training_job.py cat report.txt >> report.md
+        docker run $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG ls
+  
+    - name: Save Markdown Output
+      run: |
+        docker cp $(docker ps -lq):/app/report.md ./report.md
+
+    - name: Print Markdown Output
+      run: |
+        cat ./report.md
+
+    - name: CML Report
+      run: |
+        cml-publish ./report.md
