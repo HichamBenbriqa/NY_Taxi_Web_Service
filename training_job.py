@@ -1,7 +1,6 @@
 """_summary_
 
 """
-
 import sys
 
 from src.data.make_dataset import Data
@@ -37,7 +36,9 @@ report = (f" Training Job Submission Report\n\n"
           )
 print(report)
 
-
 # Write metrics to file
 with open('reports/report.md', 'w') as outfile:
-    outfile.write(report)
+  outfile.write(report)
+
+
+
