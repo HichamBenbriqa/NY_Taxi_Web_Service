@@ -34,7 +34,7 @@ jobs:
   submit_training_job:
     needs: build_image_push_to_ECR
     runs-on: [ubuntu-latest]
-    container: docker://dvcorg/cml-py3:latest
+    container: docker://ghcr.io/iterative/cml:0-dvc2-base1
     steps:
     - name: Checkout
       uses: actions/checkout@v2
@@ -79,6 +79,7 @@ jobs:
         ls reports
         cat reports/report.md
 
-    - name: CML Report
+    - name: Publish report using CML
       run: |
-        cml-send-comment reports/report.md
+        cml comment create reports/report.md
+    
