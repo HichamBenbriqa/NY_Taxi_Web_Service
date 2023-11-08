@@ -66,11 +66,13 @@ jobs:
         IMAGE_TAG: v09
     
       run: |
-        docker run -v $PWD:/app $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG python training_job.py
+        docker run $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG python training_job.py
         
     - name: Save Markdown Output
       run: |
-        docker cp $(docker ps -lq):/app/reports/report.md reports/report.md
+            docker cp $(docker ps -lq):/app/reports/report.md $GITHUB_WORKSPACE/reports/report.md
+      env:
+        GITHUB_WORKSPACE: ${{ github.workspace }}
 
     - name: Print Markdown Output
       run: |
