@@ -26,7 +26,7 @@ jobs:
       env:
         ECR_REGISTRY: ${{ steps.login-ecr.outputs.registry }}
         ECR_REPOSITORY: ${{ secrets.REPO_NAME }}
-        IMAGE_TAG: v06
+        IMAGE_TAG: v07
       run: |
         docker build -t $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG .
         docker push $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG
@@ -63,17 +63,18 @@ jobs:
         GITHUB_SHA: ${{ github.sha }}
         ECR_REGISTRY: ${{ steps.login-ecr.outputs.registry }}
         ECR_REPOSITORY: ${{ secrets.REPO_NAME }}
-        IMAGE_TAG: v06
+        IMAGE_TAG: v07
     
       run: |
         docker run $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG python training_job.py
         
     - name: Save Markdown Output
       run: |
-        docker cp $(docker ps -lq):/app/reports/report.md reports/report.md
+        docker cp $(docker ps -lq):/app/reports/report.md /github/workspace/reports/report.md
 
     - name: Print Markdown Output
       run: |
+        ls reports
         cat reports/report.md
 
     - name: CML Report
