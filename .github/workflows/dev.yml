@@ -26,7 +26,7 @@ jobs:
       env:
         ECR_REGISTRY: ${{ steps.login-ecr.outputs.registry }}
         ECR_REPOSITORY: ${{ secrets.REPO_NAME }}
-        IMAGE_TAG: v08
+        IMAGE_TAG: v09
       run: |
         docker build -t $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG .
         docker push $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG
@@ -63,15 +63,14 @@ jobs:
         GITHUB_SHA: ${{ github.sha }}
         ECR_REGISTRY: ${{ steps.login-ecr.outputs.registry }}
         ECR_REPOSITORY: ${{ secrets.REPO_NAME }}
-        IMAGE_TAG: v08
+        IMAGE_TAG: v09
     
       run: |
-        docker volume create my_volume
-        docker run -v my_volume:/app/reportsv $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG python training_job.py
+        docker run -v $PWD:/app $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG python training_job.py
         
     - name: Save Markdown Output
       run: |
-        docker cp $(docker ps -lq):/app/reportsv/report.md reports/report.md
+        docker cp $(docker ps -lq):/app/reports/report.md reports/report.md
 
     - name: Print Markdown Output
       run: |
