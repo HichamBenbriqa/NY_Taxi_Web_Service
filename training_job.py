@@ -39,5 +39,5 @@ print(report)
 
 
 # Write metrics to file
-with open('/reports/report.md', 'w') as outfile:
+with open('reports/report.md', 'w') as outfile:
     outfile.write(report)
