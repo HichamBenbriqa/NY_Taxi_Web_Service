@@ -34,7 +34,11 @@ report = (f" Training Job Submission Report\n\n"
             "RMSE:\n\n"
            f"{rmse}\n\n"
           )
+print(report)
 
 # Write metrics to file
-with open('report.txt', 'w') as outfile:
-    outfile.write(report)
+with open('reports/report.md', 'w') as outfile:
+  outfile.write(report)
+
+
+
