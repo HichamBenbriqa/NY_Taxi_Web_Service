@@ -78,9 +78,13 @@ jobs:
       run: |
         ls reports
         cat reports/report.md
-    - name: Archive report.md as workflow artifact
-      uses: actions/upload-artifact@v2
-      with:
-        name: report
-        path: reports/report.md
+        
+        echo "## Model metrics" > report.md
+        cat reports/report.md >> report.md
+          
+        echo "## Data viz" >> report.md
+        cml-publish feature_importance.png --md >> report.md
+        cml-publish residuals.png --md >> report.md
+          
+        cml-send-comment report.md
     
