@@ -26,6 +26,7 @@ COPY src/data /app/src/data
 COPY src/models /app/src/models
 COPY src/utils /app/src/utils
 COPY config /app/config
+COPY reports /app/reports
 COPY training_job.py /app/training_job.py
 COPY --from=builder /app/requirements.txt /app/requirements.txt
 RUN pip install --no-cache-dir -r /app/requirements.txt
