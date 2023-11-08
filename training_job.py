@@ -36,6 +36,11 @@ report = (f" Training Job Submission Report\n\n"
            f"{rmse}\n\n"
           )
 print(report)
+
+import subprocess
+
+subprocess.run(["ls", "-l"]) 
+
 # Write metrics to file
 with open('reports/report.md', 'w') as outfile:
     outfile.write(report)
