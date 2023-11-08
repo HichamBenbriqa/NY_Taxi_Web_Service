@@ -66,8 +66,9 @@ jobs:
         IMAGE_TAG: v05
     
       run: |
-        docker run -v reports $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG ls
-        docker run -v reports $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG python training_job.py
+        ls
+        docker run -v /reports $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG ls
+        docker run -v /reports $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG python training_job.py
         
     - name: Save Markdown Output
       run: |
