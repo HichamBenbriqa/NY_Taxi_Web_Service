@@ -78,4 +78,4 @@ jobs:
 
     - name: CML Report
       run: |
-        cml-publish reports/report.md
+        cml-send-comment reports/report.md
