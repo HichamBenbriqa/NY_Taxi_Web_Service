@@ -70,7 +70,7 @@ jobs:
         
     - name: Save Markdown Output
       run: |
-            docker cp $(docker ps -lq):/app/reports/report.md $GITHUB_WORKSPACE/reports/report.md
+        docker cp $(docker ps -lq):/app/reports/report.md $GITHUB_WORKSPACE/reports/report.md
       env:
         GITHUB_WORKSPACE: ${{ github.workspace }}
 
@@ -78,6 +78,11 @@ jobs:
       run: |
         ls reports
         cat reports/report.md
+    - name: Archive report.md as workflow artifact
+      uses: actions/upload-artifact@v2
+      with:
+        name: report
+        path: reports/report.md
 
     - name: Publish report using CML
       run: |
