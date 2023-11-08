@@ -70,12 +70,12 @@ jobs:
         
     - name: Save Markdown Output
       run: |
-        docker cp $(docker ps -lq):/app/reports/report.md ./report.md
+        docker cp $(docker ps -lq):/app/reports/report.md reports/report.md
 
     - name: Print Markdown Output
       run: |
-        cat ./report.md
+        cat reports/report.md
 
     - name: CML Report
       run: |
-        cml-publish ./report.md
+        cml-publish reports/report.md
