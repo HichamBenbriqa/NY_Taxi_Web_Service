@@ -28,4 +28,8 @@ COPY .env /app/.env
 COPY --from=builder /app/requirements.txt /app/requirements.txt
 
 RUN pip install --no-cache-dir -r /app/requirements.txt
+RUN dvc init --no-scm
+RUN dvc remote add -d storage s3://mlops-nyc-taxi-project/web-service/
 RUN python training_job.py
+RUN dvc add /app/data
+RUN dvc push
