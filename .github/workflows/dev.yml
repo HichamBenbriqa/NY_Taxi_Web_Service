@@ -67,14 +67,14 @@ jobs:
         
     - name: Save Markdown Output
       run: |
-        docker cp $(docker ps -lq):/app/report.md $GITHUB_WORKSPACE/report.md
+        docker cp $(docker ps -lq):/app/report.txt $GITHUB_WORKSPACE/report.txt
       env:
         GITHUB_WORKSPACE: ${{ github.workspace }}
 
     - name: Print Markdown Output
       run: |
-        echo "## Model metrics" > report.md
-        cat report.md >> report.md
+        echo "## Model metrics" > report.txt
+        cat report.txt >> report.md
         cml-send-comment report.md
       env:
         repo_token: ${{ secrets.GITHUB_TOKEN }}

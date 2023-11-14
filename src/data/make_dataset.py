@@ -19,7 +19,7 @@ class Data:
         self,
         taxi_type: str = "green",
         year: str = "2020",
-        month: str = "01",
+        month: str = "03",
         mode: str = "train",
         root_folder: str = "data",
     ) -> None:
