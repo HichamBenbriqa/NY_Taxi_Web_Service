@@ -62,7 +62,7 @@ jobs:
         IMAGE_TAG: latest
     
       run: |
-        docker run  $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG dvc push
+        docker run -e AWS_ACCESS_KEY_ID=$AWS_ACCESS_KEY_ID -e AWS_SECRET_ACCESS_KEY=$AWS_SECRET_ACCESS_KEY $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG dvc push
         
     - name: Save Markdown Output
       run: |
