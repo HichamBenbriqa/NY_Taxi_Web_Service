@@ -1,0 +1,16 @@
+{"obj": {"type": "AssignString", "path": ["sys", "name"], "value": "Untitled"}, "version": 1}
+{"obj": {"type": "AssignString", "path": ["sys", "description"], "value": ""}, "version": 2}
+{"obj": {"type": "AssignString", "path": ["monitoring", "51cc7a71", "hostname"], "value": "hicham-AERO-5-KE"}, "version": 3}
+{"obj": {"type": "AssignString", "path": ["sys", "hostname"], "value": "hicham-AERO-5-KE"}, "version": 4}
+{"obj": {"type": "AssignString", "path": ["monitoring", "51cc7a71", "pid"], "value": "390618"}, "version": 5}
+{"obj": {"type": "AssignString", "path": ["monitoring", "51cc7a71", "tid"], "value": "140601840566272"}, "version": 6}
+{"obj": {"type": "AssignBool", "path": ["sys", "failed"], "value": false}, "version": 7}
+{"obj": {"type": "AssignString", "path": ["source_code", "integrations", "neptune-optuna"], "value": "1.1.0"}, "version": 8}
+{"obj": {"type": "AssignDatetime", "path": ["trials", "trials", "3", "datetime_start"], "value": 1687796551749}, "version": 9}
+{"obj": {"type": "AssignDatetime", "path": ["trials", "trials", "3", "datetime_complete"], "value": 1687796557131}, "version": 10}
+{"obj": {"type": "AssignString", "path": ["trials", "trials", "3", "duration"], "value": "0:00:05.381490"}, "version": 11}
+{"obj": {"type": "AssignString", "path": ["trials", "trials", "3", "distributions", "max_depth"], "value": "IntDistribution(high=20, log=False, low=10, step=1)"}, "version": 12}
+{"obj": {"type": "AssignString", "path": ["trials", "trials", "3", "distributions", "n_estimators"], "value": "IntDistribution(high=100, log=False, low=50, step=1)"}, "version": 13}
+{"obj": {"type": "AssignInt", "path": ["trials", "trials", "3", "params", "max_depth"], "value": 16}, "version": 14}
+{"obj": {"type": "AssignInt", "path": ["trials", "trials", "3", "params", "n_estimators"], "value": 74}, "version": 15}
+{"obj": {"type": "AssignFloat", "path": ["trials", "trials", "3", "value"], "value": 5.938058857675154}, "version": 16}

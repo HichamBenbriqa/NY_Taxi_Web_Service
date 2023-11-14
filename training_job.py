@@ -27,9 +27,10 @@ print(trainer.params, rmse)
 
 ## Save the pipeline
 trainer.save_pipeline()
+trainer.upload_to_neptune()
 
 
-report = (f" Training Job Submission Report\n\n"
+report = (f" Training Job Submission Report \n\n"
            f"Training Job parameters: {trainer.params}\n\n"
             "RMSE:\n\n"
            f"{rmse}\n\n"
@@ -37,7 +38,7 @@ report = (f" Training Job Submission Report\n\n"
 print(report)
 
 # Write metrics to file
-with open('reports/report.md', 'w') as outfile:
+with open('report.md', 'w') as outfile:
   outfile.write(report)
 
 

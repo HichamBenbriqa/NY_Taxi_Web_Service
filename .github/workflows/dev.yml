@@ -26,7 +26,7 @@ jobs:
       env:
         ECR_REGISTRY: ${{ steps.login-ecr.outputs.registry }}
         ECR_REPOSITORY: ${{ secrets.REPO_NAME }}
-        IMAGE_TAG: v10
+        IMAGE_TAG: latest
       run: |
         docker build -t $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG .
         docker push $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG
@@ -52,35 +52,26 @@ jobs:
     - name: Start training job
       id: train_job
       env:
-        repo_token: ${{ secrets.GITHUB_TOKEN }}
         AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
         AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
         AWS_DEFAULT_REGION: ${{ secrets.AWS_DEFAULT_REGION }}
-        AWS_ACCOUNT_ID: ${{ secrets.AWS_ACOUNT_ID }}
-        BUCKET_NAME: ${{ secrets.BUCKET_NAME }}
-        PREFIX: ${{ secrets.PREFIX }}
-        IAM_ROLE_NAME: ${{ secrets.IAM_ROLE_NAME }}
-        GITHUB_SHA: ${{ github.sha }}
         ECR_REGISTRY: ${{ steps.login-ecr.outputs.registry }}
         ECR_REPOSITORY: ${{ secrets.REPO_NAME }}
-        IMAGE_TAG: v10
+        IMAGE_TAG: latest
     
       run: |
-        docker run $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG python training_job.py
+        docker run $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG
         
     - name: Save Markdown Output
       run: |
-        docker cp $(docker ps -lq):/app/reports/report.md $GITHUB_WORKSPACE/reports/report.md
+        docker cp $(docker ps -lq):/app/report.md $GITHUB_WORKSPACE/report.md
       env:
         GITHUB_WORKSPACE: ${{ github.workspace }}
 
     - name: Print Markdown Output
       run: |
-        ls reports
-        cat reports/report.md
-        
         echo "## Model metrics" > report.md
-        cat reports/report.md >> report.md
+        cat report.md >> report.md
         cml-send-comment report.md
       env:
         repo_token: ${{ secrets.GITHUB_TOKEN }}

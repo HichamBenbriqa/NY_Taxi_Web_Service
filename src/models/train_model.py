@@ -2,18 +2,25 @@
     summary
 """
 import os
+import neptune
 from joblib import dump, load
+from dotenv import load_dotenv
 from sklearn.metrics import mean_squared_error
 from sklearn.ensemble import RandomForestRegressor
 from sklearn.pipeline import make_pipeline
 from sklearn.feature_extraction import DictVectorizer
 
+load_dotenv()
+NEPTUNE_PROJECT = os.getenv("NEPTUNE_PROJECT")
+NPETUNE_API_TOKEN = os.getenv("NPETUNE_API_TOKEN")
+MODEL_ID = os.getenv("MODEL_ID")
+print(NEPTUNE_PROJECT, NPETUNE_API_TOKEN, MODEL_ID)
 
 class Trainer:
     """
     summary
     """
-
+    
     def __init__(
         self,
         dict_train=None,
@@ -21,7 +28,7 @@ class Trainer:
         dict_test=None,
         y_test=None,
         params=None,
-        root_folder=("models"),
+        root_folder="models",
     ):
         self.dict_train = dict_train
         self.y_train = y_train
@@ -60,8 +67,18 @@ class Trainer:
 
     def save_pipeline(self):
         """_summary_"""
+        if not os.path.exists(self.root_folder):
+            os.makedirs(self.root_folder)
         dump(self.pipeline, self.pipeline_path)
 
     def load_pipeline(self):
         """_summary_"""
         self.pipeline = load(self.pipeline_path)
+    
+    def upload_to_neptune(self):
+        model_version = neptune.init_model_version(model=MODEL_ID, project=NEPTUNE_PROJECT, api_token=NPETUNE_API_TOKEN,)
+        model_version["model"].upload(self.pipeline_path)
+        #model_version["validation/dataset"].track_files(self.dict_test)
+        #model_version["validation/acc"] = 0.97
+        model_version.stop()
+        print("Model uploaded to Neptune")

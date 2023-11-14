@@ -5,13 +5,15 @@ import os
 import pickle
 import pandas as pd
 from dotenv import load_dotenv
+import sys
+sys.path.insert(0, './src')
 
 
 class Data:
     """_summary_"""
 
     load_dotenv()
-    BASE_URL = os.getenv("BASE_URL", "https://d37ci6vzurychx.cloudfront.net/trip-data/")
+    BASE_URL = os.getenv("BASE_URL")
 
     def __init__(
         self,
@@ -30,14 +32,17 @@ class Data:
         self.root_folder = root_folder
         self.paths = self.get_paths()
 
+
     def get_paths(self):
         """_summary_"""
         parquet_filename = (
             f"{self.mode}_{self.taxi_type}_{self.year}-{self.month}.parquet"
         )
+
         dict_filename = f"{self.mode}_{self.taxi_type}_{self.year}-{self.month}.pkl"
 
         raw_file_location = os.path.join(self.root_folder, "raw/", parquet_filename)
+
         interim_file_location = os.path.join(
             self.root_folder, "interim/", parquet_filename
         )
@@ -56,11 +61,16 @@ class Data:
             "processed": processed_file_location,
         }
 
+
     def download_data(self):
         """
         _summary_
         """
         self.data_frame = pd.read_parquet(self.paths["file_url"])
+
+        if not os.path.exists(os.path.join(self.root_folder, "raw")):
+            os.makedirs(os.path.join(self.root_folder, "raw"))
+
         self.data_frame.to_parquet(self.paths["raw"])
 
     def prepare_data(self):
@@ -81,7 +91,12 @@ class Data:
             "DOLocationID",
         ]
         self.data_frame[categorical] = self.data_frame[categorical].astype(str)
+
+        if not os.path.exists(os.path.join(self.root_folder, "interim")):
+            os.makedirs(os.path.join(self.root_folder, "interim"))
+
         self.data_frame.to_parquet(self.paths["interim"])
+
 
     def prepare_dictionaries(self):
         """_summary_"""
@@ -94,13 +109,18 @@ class Data:
             orient="records"
         )
 
+        if not os.path.exists(os.path.join(self.root_folder, "processed")):
+            os.makedirs(os.path.join(self.root_folder, "processed"))
+
         with open(self.paths["processed"], "wb") as dict_file:
             pickle.dump(self.data_dict, dict_file)
+        
 
     def get_target_values(self):
         """_summary_"""
         target_column = self.data_frame["duration"].values
         return target_column
+
 
     def run(self):
         """_summary_"""
