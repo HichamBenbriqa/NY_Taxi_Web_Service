@@ -2,8 +2,6 @@ name: Training Job
 on:
   push:
     branches: [ "dev" ]
-env:
-  BASE_URL: https://d37ci6vzurychx.cloudfront.net/trip-data/
 
 jobs:
   build_image_push_to_ECR:
