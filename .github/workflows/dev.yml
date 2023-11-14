@@ -62,7 +62,7 @@ jobs:
         IMAGE_TAG: latest
     
       run: |
-        docker run $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG
+        docker run  $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG dvc push
         
     - name: Save Markdown Output
       run: |
