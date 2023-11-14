@@ -8,8 +8,8 @@ from src.models.train_model import Trainer
 from src.utils.utils import get_config, get_previous_month
 
 ## Instantiate a Data object for training and testing
-train_data = Data()
-test_data = Data("green", year= "2019", month="12", mode="test")
+train_data = Data("green", year= "2021", month="12", mode="test")
+test_data = Data("green", year= "2021", month="11", mode="test")
 
 ## Run the Data object to download, prepare and save the train and test data
 train_data.run()
