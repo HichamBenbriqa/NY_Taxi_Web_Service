@@ -2,8 +2,6 @@ name: Training Job
 on:
   push:
     branches: [ "dev" ]
-env:
-  BASE_URL: https://d37ci6vzurychx.cloudfront.net/trip-data/
 
 jobs:
   build_image_push_to_ECR:
@@ -12,7 +10,7 @@ jobs:
     - name: Checkout
       uses: actions/checkout@v2
     - name: 'Create env file'
-        run: |
+      run:
           echo "${{ secrets.ENV_FILE }}" > .env
     - name: Configure AWS Credentials
       uses: aws-actions/configure-aws-credentials@v1
@@ -24,7 +22,6 @@ jobs:
     - name: Amazon ECR
       id: login-ecr
       uses: aws-actions/amazon-ecr-login@v1
-
     - name: Build, tag, and push image to Amazon ECR
       env:
         ECR_REGISTRY: ${{ steps.login-ecr.outputs.registry }}
@@ -63,7 +60,7 @@ jobs:
         IMAGE_TAG: latest
     
       run: |
-        docker run $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG
+        docker run -e AWS_ACCESS_KEY_ID=$AWS_ACCESS_KEY_ID -e AWS_SECRET_ACCESS_KEY=$AWS_SECRET_ACCESS_KEY $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG dvc push
         
     - name: Save Markdown Output
       run: |
