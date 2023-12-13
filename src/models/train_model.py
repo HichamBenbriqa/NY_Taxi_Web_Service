@@ -14,22 +14,15 @@ load_dotenv()
 NEPTUNE_PROJECT = os.getenv("NEPTUNE_PROJECT")
 NPETUNE_API_TOKEN = os.getenv("NPETUNE_API_TOKEN")
 MODEL_ID = os.getenv("MODEL_ID")
-print(NEPTUNE_PROJECT, NPETUNE_API_TOKEN, MODEL_ID)
+S3_BUCKET = os.getenv("S3_BUCKET")
+
 
 class Trainer:
     """
     summary
     """
-    
-    def __init__(
-        self,
-        dict_train=None,
-        y_train=None,
-        dict_test=None,
-        y_test=None,
-        params=None,
-        root_folder="models",
-    ):
+
+    def __init__(self, dict_train=None, y_train=None, dict_test=None, y_test=None, params=None, root_folder="models"):
         self.dict_train = dict_train
         self.y_train = y_train
         self.dict_test = dict_test
@@ -41,9 +34,7 @@ class Trainer:
 
     def train(self):
         """_summary_"""
-        self.pipeline = make_pipeline(
-            DictVectorizer(), RandomForestRegressor(**self.params, n_jobs=-1)
-        )
+        self.pipeline = make_pipeline(DictVectorizer(), RandomForestRegressor(**self.params, n_jobs=-1))
         self.pipeline.fit(self.dict_train, self.y_train)
 
     def evaluate(self):
@@ -74,11 +65,24 @@ class Trainer:
     def load_pipeline(self):
         """_summary_"""
         self.pipeline = load(self.pipeline_path)
-    
+
     def upload_to_neptune(self):
-        model_version = neptune.init_model_version(model=MODEL_ID, project=NEPTUNE_PROJECT, api_token=NPETUNE_API_TOKEN,)
+        # turns out it is better to use runs also because runs enable to keep more information about the experiments, e.g git info cannot be tracked
+        # with model version alone, so i create a run, track relevant parameters and data, then create a model version where I track the model, and I
+        # associate it with the run by logging the run id
+
+        run = neptune.init_run(project=NEPTUNE_PROJECT, api_token=NPETUNE_API_TOKEN)
+        run["params"] = self.params
+        run["dataset/raw"].track_files("s3://mlops-nyc-taxi-project/web-service/raw")
+        run["dataset/interim"].track_files("s3://mlops-nyc-taxi-project/web-service/interim")
+        run["dataset/processed"].track_files("s3://mlops-nyc-taxi-project/web-service/processed")
+
+        model_version = neptune.init_model_version(model=MODEL_ID, project=NEPTUNE_PROJECT, api_token=NPETUNE_API_TOKEN)
         model_version["model"].upload(self.pipeline_path)
-        #model_version["validation/dataset"].track_files(self.dict_test)
-        #model_version["validation/acc"] = 0.97
+        model_version["run/id"] = run["sys/id"].fetch()  # associate this model version with the run that produced it
+
+        # model_version["validation/acc"] = 0.97
+
         model_version.stop()
+        run.stop()
         print("Model uploaded to Neptune")

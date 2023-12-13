@@ -7,8 +7,11 @@ import boto3
 from botocore.exceptions import ClientError
 from datetime import date
 from hydra import initialize, compose
+from dotenv import load_dotenv
 
-
+load_dotenv()
+BASE_URL = os.getenv("BASE_URL")
+DATA_ROOT_LOCAL_FOLDER = os.getenv("DATA_ROOT_LOCAL_FOLDER", "data")
 CONFIG_DIR = "../../config"
 
 
@@ -39,15 +42,9 @@ def get_previous_month(year, month):
     The input month and year are the training data. The previous month and year are the test data.
     """
     current_date = date(year, month, 1)
-    month, year = (
-        (current_date.month - 1, current_date.year)
-        if current_date.month != 1
-        else (12, current_date.year - 1)
-    )
+    month, year = (current_date.month - 1, current_date.year) if current_date.month != 1 else (12, current_date.year - 1)
 
     return year, month
-
-
 
 
 def upload_file_to_s3(file_name, bucket, subfolder):
@@ -65,10 +62,32 @@ def upload_file_to_s3(file_name, bucket, subfolder):
     # Upload the file
     print(key)
     print(file_name)
-    s3_client = boto3.client('s3')
+    s3_client = boto3.client("s3")
     try:
         response = s3_client.upload_file(file_name, bucket, key)
     except ClientError as e:
         logging.error(e)
         return False
     return True
+
+
+def get_paths(input_data):
+    """Get the paths for different data files."""
+
+    taxi_type = input_data['taxi_type']
+    year = input_data['year']
+    month = input_data['month']
+
+    # Set the the url of the data file to be downloaded from the NYC taxi server
+    file_url = f"{self.BASE_URL}{self.taxi_type}_tripdata_{self.year:04d}-{self.month:02d}.parquet"
+
+    # Set the dict and parquet filenames
+    parquet_filename = f"{self.mode}_{taxi_type}_{year}-{month}.parquet"
+    dict_filename = f"{self.mode}_{taxi_type}_{year}-{month}.pkl"
+
+    # Set the local file locations
+    raw_file_location = os.path.join(DATA_ROOT_LOCAL_FOLDER, "raw/", parquet_filename)
+    interim_file_location = os.path.join(DATA_ROOT_LOCAL_FOLDER, "interim/", parquet_filename)
+    processed_file_location = os.path.join(DATA_ROOT_LOCAL_FOLDER, "processed/", dict_filename)
+
+    return {"file_url": file_url, "raw": raw_file_location, "interim": interim_file_location, "processed": processed_file_location}
