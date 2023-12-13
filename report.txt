@@ -4,5 +4,5 @@ Training Job parameters: {'n_estimators': 20, 'max_depth': 10}
 
 RMSE:
 
-8.70138741238463
+8.703314264953502
 

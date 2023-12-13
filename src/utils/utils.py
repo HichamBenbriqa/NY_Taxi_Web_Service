@@ -69,25 +69,3 @@ def upload_file_to_s3(file_name, bucket, subfolder):
         logging.error(e)
         return False
     return True
-
-
-def get_paths(input_data):
-    """Get the paths for different data files."""
-
-    taxi_type = input_data['taxi_type']
-    year = input_data['year']
-    month = input_data['month']
-
-    # Set the the url of the data file to be downloaded from the NYC taxi server
-    file_url = f"{self.BASE_URL}{self.taxi_type}_tripdata_{self.year:04d}-{self.month:02d}.parquet"
-
-    # Set the dict and parquet filenames
-    parquet_filename = f"{self.mode}_{taxi_type}_{year}-{month}.parquet"
-    dict_filename = f"{self.mode}_{taxi_type}_{year}-{month}.pkl"
-
-    # Set the local file locations
-    raw_file_location = os.path.join(DATA_ROOT_LOCAL_FOLDER, "raw/", parquet_filename)
-    interim_file_location = os.path.join(DATA_ROOT_LOCAL_FOLDER, "interim/", parquet_filename)
-    processed_file_location = os.path.join(DATA_ROOT_LOCAL_FOLDER, "processed/", dict_filename)
-
-    return {"file_url": file_url, "raw": raw_file_location, "interim": interim_file_location, "processed": processed_file_location}

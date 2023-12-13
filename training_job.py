@@ -8,8 +8,11 @@ from src.data.make_dataset import Data
 from src.models.train_model import Trainer
 
 ## Instantiate a Data object for training and testing
-train_data = Data("green", year="2021", month="12", mode="test")
-test_data = Data("green", year="2021", month="11", mode="test")
+train_data_file = {"taxi_type": "green", "year": 2021, "month": 12}
+test_data_file = {"taxi_type": "green", "year": 2021, "month": 11}
+
+train_data = Data(input_data=train_data_file, mode="train")
+test_data = Data(input_data=test_data_file, mode="test")
 
 ## Run the Data object to download, prepare and save the train and test data
 train_data.run()
