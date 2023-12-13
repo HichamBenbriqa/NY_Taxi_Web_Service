@@ -14,9 +14,9 @@ from typing import Dict
 from utils.utils import upload_file_to_s3
 
 load_dotenv()
-S3_BUCKET = os.getenv("S3_BUCKET")
-BASE_URL = os.getenv("BASE_URL")
-DATA_ROOT_LOCAL_FOLDER = os.getenv("DATA_ROOT_LOCAL_FOLDER")
+S3_BUCKET = os.getenv("S3_BUCKET", "mlops-nyc-taxi-project")
+BASE_URL = os.getenv("BASE_URL", "https://d37ci6vzurychx.cloudfront.net/trip-data/")
+DATA_ROOT_LOCAL_FOLDER = os.getenv("DATA_ROOT_LOCAL_FOLDER", "data")
 
 
 class Data:
