@@ -58,21 +58,13 @@ jobs:
         ECR_REGISTRY: ${{ steps.login-ecr.outputs.registry }}
         ECR_REPOSITORY: ${{ secrets.REPO_NAME }}
         IMAGE_TAG: latest
+        GITHUB_WORKSPACE: ${{ github.workspace }}
+        repo_token: ${{ secrets.GITHUB_TOKEN }}
     
       run: |
         docker run -e AWS_ACCESS_KEY_ID=$AWS_ACCESS_KEY_ID -e AWS_SECRET_ACCESS_KEY=$AWS_SECRET_ACCESS_KEY $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG python training_job.py
-        
-    - name: Save Markdown Output
-      run: |
         docker cp $(docker ps -lq):/app/report.txt $GITHUB_WORKSPACE/report.txt
-      env:
-        GITHUB_WORKSPACE: ${{ github.workspace }}
-
-    - name: Print Markdown Output
-      run: |
         echo "## Model metrics" > report.txt
         cat report.txt >> report.md
         cml-send-comment report.md
-      env:
-        repo_token: ${{ secrets.GITHUB_TOKEN }}
-    
+  
