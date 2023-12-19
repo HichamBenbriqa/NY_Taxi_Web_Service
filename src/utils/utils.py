@@ -77,6 +77,26 @@ def upload_file_to_s3(file_name, bucket, subfolder):
     # else:
     #     print("AWS_ACCESS_KEY_ID is not set.")
 
+    # Initialize a Boto3 SSM client
+    ssm_client = boto3.client('ssm')
+
+    # Specify the name of the Parameter Store parameter where your access keys are stored
+    parameter_aws_access_key_id = 'access_key_id'
+    parameter_aws_secret_access_key = 'secret_access_key'
+
+    # Retrieve the parameter value (access keys) from Parameter Store
+    response_aws_access_key_id = ssm_client.get_parameter(Name=parameter_aws_access_key_id, WithDecryption=True)
+    response_aws_secret_access_key = ssm_client.get_parameter(Name=parameter_aws_secret_access_key, WithDecryption=True)
+
+    # Parse the response to extract the access keys
+    # parameter_value = response['Parameter']['Value'].splitlines()
+    aws_access_key_id, aws_secret_access_key = response_aws_access_key_id['Parameter']['Value'], response_aws_secret_access_key['Parameter']['Value']
+
+    # Use the retrieved access keys for AWS SDK or API calls
+    # For example, you can set them as environment variables for AWS SDK clients
+    os.environ['AWS_ACCESS_KEY_ID'] = aws_access_key_id
+    os.environ['AWS_SECRET_ACCESS_KEY'] = aws_secret_access_key
+
     s3_client = boto3.client("s3")
     # session = boto3.Session(aws_access_key_id=aws_access_key_id, aws_secret_access_key=AWS_SECRET_ACCESS_KEY)
 
