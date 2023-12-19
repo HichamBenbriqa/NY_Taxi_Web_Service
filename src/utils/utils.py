@@ -13,7 +13,6 @@ load_dotenv()
 BASE_URL = os.getenv("BASE_URL")
 DATA_ROOT_LOCAL_FOLDER = os.getenv("DATA_ROOT_LOCAL_FOLDER", "data")
 CONFIG_DIR = os.getenv("CONFIG_DIR")
-AWS_REGION = os.getenv("AWS_REGION")
 
 
 def get_config(config_path: str = CONFIG_DIR, config_type: str = "data"):
@@ -60,43 +59,8 @@ def upload_file_to_s3(file_name, bucket, subfolder):
     # If S3 object_name was not specified, use file_name
     key = os.path.join("web-service", subfolder, os.path.basename(file_name))
 
-    # Upload the file
-    # print(key)
-    # print(file_name)
+    s3_client = boto3.client("s3")
 
-    # print(os.environ)
-
-    # # Access AWS_ACCESS_KEY_ID environment variable
-    # aws_access_key_id = os.environ.get("AWS_ACCESS_KEY_ID")
-    # AWS_SECRET_ACCESS_KEY = os.environ.get("AWS_SECRET_ACCESS_KEY")
-    # ECR_REGISTRY = os.environ.get("ECR_REGISTRY")
-
-    # if aws_access_key_id or AWS_SECRET_ACCESS_KEY or ECR_REGISTRY:
-    #     print(f"AWS Access Key ID: {aws_access_key_id}")
-    #     print(f"AWS_SECRET_ACCESS_KEY: {AWS_SECRET_ACCESS_KEY}")
-    #     print(f"AWS_SECRET_ACCESS_KEY: {ECR_REGISTRY}")
-    # else:
-    #     print("AWS_ACCESS_KEY_ID is not set.")
-
-    # Initialize a Boto3 SSM client
-    ssm_client = boto3.client('ssm', region_name=AWS_REGION)
-
-    # Specify the name of the Parameter Store parameter where your access keys are stored
-    parameter_aws_access_key_id = 'access_key_id'
-    parameter_aws_secret_access_key = 'secret_access_key'
-
-    # Retrieve the parameter value (access keys) from Parameter Store
-    response_aws_access_key_id = ssm_client.get_parameter(Name=parameter_aws_access_key_id, WithDecryption=True)
-    response_aws_secret_access_key = ssm_client.get_parameter(Name=parameter_aws_secret_access_key, WithDecryption=True)
-
-    # Parse the response to extract the access keys
-    # parameter_value = response['Parameter']['Value'].splitlines()
-    aws_access_key_id, aws_secret_access_key = response_aws_access_key_id['Parameter']['Value'], response_aws_secret_access_key['Parameter']['Value']
-
-    # s3_client = boto3.client("s3")
-    session = boto3.Session(aws_access_key_id=aws_access_key_id, aws_secret_access_key=aws_secret_access_key)
-
-    s3_client = session.client('s3')
     try:
         response = s3_client.upload_file(file_name, bucket, key)
     except ClientError as e:
