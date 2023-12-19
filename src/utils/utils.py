@@ -79,6 +79,8 @@ def upload_file_to_s3(file_name, bucket, subfolder):
     #     print("AWS_ACCESS_KEY_ID is not set.")
 
     # Initialize a Boto3 SSM client
+    print(AWS_REGION)
+    print(os.environ)
     ssm_client = boto3.client('ssm', region_name=AWS_REGION)
 
     # Specify the name of the Parameter Store parameter where your access keys are stored
