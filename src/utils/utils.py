@@ -79,8 +79,6 @@ def upload_file_to_s3(file_name, bucket, subfolder):
     #     print("AWS_ACCESS_KEY_ID is not set.")
 
     # Initialize a Boto3 SSM client
-    print(AWS_REGION)
-    print(os.environ)
     ssm_client = boto3.client('ssm', region_name=AWS_REGION)
 
     # Specify the name of the Parameter Store parameter where your access keys are stored
@@ -95,15 +93,10 @@ def upload_file_to_s3(file_name, bucket, subfolder):
     # parameter_value = response['Parameter']['Value'].splitlines()
     aws_access_key_id, aws_secret_access_key = response_aws_access_key_id['Parameter']['Value'], response_aws_secret_access_key['Parameter']['Value']
 
-    # Use the retrieved access keys for AWS SDK or API calls
-    # For example, you can set them as environment variables for AWS SDK clients
-    os.environ['AWS_ACCESS_KEY_ID'] = aws_access_key_id
-    os.environ['AWS_SECRET_ACCESS_KEY'] = aws_secret_access_key
+    # s3_client = boto3.client("s3")
+    session = boto3.Session(aws_access_key_id=aws_access_key_id, aws_secret_access_key=aws_secret_access_key)
 
-    s3_client = boto3.client("s3")
-    # session = boto3.Session(aws_access_key_id=aws_access_key_id, aws_secret_access_key=AWS_SECRET_ACCESS_KEY)
-
-    # s3_client = session.client('s3')
+    s3_client = session.client('s3')
     try:
         response = s3_client.upload_file(file_name, bucket, key)
     except ClientError as e:
