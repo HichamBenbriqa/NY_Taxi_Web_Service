@@ -60,27 +60,27 @@ def upload_file_to_s3(file_name, bucket, subfolder):
     key = os.path.join("web-service", subfolder, os.path.basename(file_name))
 
     # Upload the file
-    print(key)
-    print(file_name)
+    # print(key)
+    # print(file_name)
 
-    print(os.environ)
+    # print(os.environ)
 
-    # Access AWS_ACCESS_KEY_ID environment variable
-    aws_access_key_id = os.environ.get("AWS_ACCESS_KEY_ID")
-    AWS_SECRET_ACCESS_KEY = os.environ.get("AWS_SECRET_ACCESS_KEY")
-    ECR_REGISTRY = os.environ.get("ECR_REGISTRY")
+    # # Access AWS_ACCESS_KEY_ID environment variable
+    # aws_access_key_id = os.environ.get("AWS_ACCESS_KEY_ID")
+    # AWS_SECRET_ACCESS_KEY = os.environ.get("AWS_SECRET_ACCESS_KEY")
+    # ECR_REGISTRY = os.environ.get("ECR_REGISTRY")
 
-    if aws_access_key_id or AWS_SECRET_ACCESS_KEY or ECR_REGISTRY:
-        print(f"AWS Access Key ID: {aws_access_key_id}")
-        print(f"AWS_SECRET_ACCESS_KEY: {AWS_SECRET_ACCESS_KEY}")
-        print(f"AWS_SECRET_ACCESS_KEY: {ECR_REGISTRY}")
-    else:
-        print("AWS_ACCESS_KEY_ID is not set.")
+    # if aws_access_key_id or AWS_SECRET_ACCESS_KEY or ECR_REGISTRY:
+    #     print(f"AWS Access Key ID: {aws_access_key_id}")
+    #     print(f"AWS_SECRET_ACCESS_KEY: {AWS_SECRET_ACCESS_KEY}")
+    #     print(f"AWS_SECRET_ACCESS_KEY: {ECR_REGISTRY}")
+    # else:
+    #     print("AWS_ACCESS_KEY_ID is not set.")
 
-    # s3_client = boto3.client("s3")
-    session = boto3.Session(aws_access_key_id=aws_access_key_id, aws_secret_access_key=AWS_SECRET_ACCESS_KEY)
+    s3_client = boto3.client("s3")
+    # session = boto3.Session(aws_access_key_id=aws_access_key_id, aws_secret_access_key=AWS_SECRET_ACCESS_KEY)
 
-    s3_client = session.client('s3')
+    # s3_client = session.client('s3')
     try:
         response = s3_client.upload_file(file_name, bucket, key)
     except ClientError as e:
