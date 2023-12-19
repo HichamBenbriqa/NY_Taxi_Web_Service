@@ -12,7 +12,8 @@ from dotenv import load_dotenv
 load_dotenv()
 BASE_URL = os.getenv("BASE_URL")
 DATA_ROOT_LOCAL_FOLDER = os.getenv("DATA_ROOT_LOCAL_FOLDER", "data")
-CONFIG_DIR = "../../config"
+CONFIG_DIR = os.getenv("CONFIG_DIR")
+AWS_REGION = os.getenv("AWS_REGION")
 
 
 def get_config(config_path: str = CONFIG_DIR, config_type: str = "data"):
@@ -78,7 +79,7 @@ def upload_file_to_s3(file_name, bucket, subfolder):
     #     print("AWS_ACCESS_KEY_ID is not set.")
 
     # Initialize a Boto3 SSM client
-    ssm_client = boto3.client('ssm')
+    ssm_client = boto3.client('ssm', region_name=AWS_REGION)
 
     # Specify the name of the Parameter Store parameter where your access keys are stored
     parameter_aws_access_key_id = 'access_key_id'
