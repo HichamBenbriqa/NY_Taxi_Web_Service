@@ -63,13 +63,17 @@ def upload_file_to_s3(file_name, bucket, subfolder):
     print(key)
     print(file_name)
 
+    print(os.environ)
+
     # Access AWS_ACCESS_KEY_ID environment variable
     aws_access_key_id = os.environ.get("AWS_ACCESS_KEY_ID")
     AWS_SECRET_ACCESS_KEY = os.environ.get("AWS_SECRET_ACCESS_KEY")
+    ECR_REGISTRY = os.environ.get("ECR_REGISTRY")
 
-    if aws_access_key_id:
+    if aws_access_key_id or AWS_SECRET_ACCESS_KEY or ECR_REGISTRY:
         print(f"AWS Access Key ID: {aws_access_key_id}")
         print(f"AWS_SECRET_ACCESS_KEY: {AWS_SECRET_ACCESS_KEY}")
+        print(f"AWS_SECRET_ACCESS_KEY: {ECR_REGISTRY}")
     else:
         print("AWS_ACCESS_KEY_ID is not set.")
 
