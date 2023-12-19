@@ -62,11 +62,19 @@ def upload_file_to_s3(file_name, bucket, subfolder):
     # Upload the file
     print(key)
     print(file_name)
-    print(os.environ)
-    print(os.environ["AWS_ACCESS_KEY_ID"])
-    print(os.environ["AWS_SECRET_ACCESS_KEY"])
+
+    # Access AWS_ACCESS_KEY_ID environment variable
+    aws_access_key_id = os.environ.get("AWS_ACCESS_KEY_ID")
+    AWS_SECRET_ACCESS_KEY = os.environ.get("AWS_SECRET_ACCESS_KEY")
+
+    if aws_access_key_id:
+        print(f"AWS Access Key ID: {aws_access_key_id}")
+        print(f"AWS_SECRET_ACCESS_KEY: {AWS_SECRET_ACCESS_KEY}")
+    else:
+        print("AWS_ACCESS_KEY_ID is not set.")
+
     # s3_client = boto3.client("s3")
-    session = boto3.Session(aws_access_key_id=os.getenv("AWS_ACCESS_KEY_ID"), aws_secret_access_key=os.getenv("AWS_SECRET_ACCESS_KEY"))
+    session = boto3.Session(aws_access_key_id=aws_access_key_id, aws_secret_access_key=AWS_SECRET_ACCESS_KEY)
 
     s3_client = session.client('s3')
     try:
