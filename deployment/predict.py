@@ -1,10 +1,9 @@
-"""_summary_
-"""
+"""_summary_."""
 import os
-import neptune as neptune
 
+import neptune as neptune
 from dotenv import load_dotenv
-from flask import Flask, jsonify, request  # pylint: disable=0E401
+from flask import Flask, jsonify, request
 from joblib import load
 
 load_dotenv()
@@ -15,9 +14,10 @@ NEPTUNE_API_TOKEN = os.getenv("NEPTUNE_API_TOKEN")
 
 
 def get_model_from_neptune():
-    """_summary_
+    """_summary_.
 
-    :return: _description_"""
+    :return: _description_
+    """
     model = neptune.init_model(
         project=PROJECT_NAME,
         api_token=NEPTUNE_API_TOKEN,
@@ -48,7 +48,7 @@ def get_model_from_neptune():
 
 
 def prepare_features(ride):
-    """_summary_
+    """_summary_.
 
     :param ride: _description_
     :type ride: _type_
@@ -56,13 +56,13 @@ def prepare_features(ride):
     :rtype: _type_
     """
     features = {}
-    features["PU_DO"] = "%s_%s" % (ride["PULocationID"], ride["DOLocationID"])
+    features["PU_DO"] = "{}_{}".format(ride["PULocationID"], ride["DOLocationID"])
     features["trip_distance"] = ride["trip_distance"]
     return features
 
 
 def predict(features):
-    """_summary_
+    """_summary_.
 
     :param features: _description_
     :type features: _type_
@@ -82,7 +82,7 @@ app = Flask("duration-prediction")
 
 @app.route("/predict", methods=["POST"])
 def predict_endpoint():
-    """_summary_
+    """_summary_.
 
     :return: _description_
     :rtype: _type_

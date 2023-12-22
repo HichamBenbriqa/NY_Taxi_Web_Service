@@ -1,6 +1,7 @@
 # Do not push the models and data folders as they may contain large files. Their content is being tracked by dvc and saved in s3.
 models/
 data/
+.neptune
 
 # By te-compiled / optimized / DLL files
 __pycache__/

@@ -1,11 +1,8 @@
-"""_summary_
+"""_summary_."""
 
-"""
-import sys
-
-from src.utils.utils import get_config, get_previous_month
 from src.data.make_dataset import Data
 from src.models.train_model import Trainer
+from src.utils.utils import get_config
 
 ## Instantiate a Data object for training and testing
 train_data_file = {"taxi_type": "green", "year": 2021, "month": 12}
@@ -40,9 +37,12 @@ trainer.save_pipeline()
 trainer.upload_to_neptune()
 
 
-report = f" Training Job Submission Report \n\nTraining Job parameters: {trainer.params}\n\nRMSE:\n\n{rmse}\n\n"
+report = (
+    f" Training Job Report \nTraining Job parameters: {trainer.params}\nRMSE:\n{rmse}\n"
+)
+
 print(report)
 
 # Write metrics to file
-with open('report.txt', 'w') as outfile:
+with open("report.txt", "w") as outfile:
     outfile.write(report)
