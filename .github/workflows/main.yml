@@ -58,7 +58,7 @@ jobs:
         AWS_DEFAULT_REGION: ${{ secrets.AWS_DEFAULT_REGION }}
         ECR_REGISTRY: ${{ steps.login-ecr.outputs.registry }}
         ECR_REPOSITORY: ${{ secrets.REPO_NAME }}
-        IMAGE_TAG: latest
+        IMAGE_TAG: deploy-latest
         GITHUB_WORKSPACE: ${{ github.workspace }}
         repo_token: ${{ secrets.GITHUB_TOKEN }}
 
