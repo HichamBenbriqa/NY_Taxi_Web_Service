@@ -1,7 +1,9 @@
-import os
+"""Test deployment script."""
 import json
-from dotenv import load_dotenv
+import os
+
 import requests
+from dotenv import load_dotenv
 
 # from deepdiff import DeepDiff
 load_dotenv()

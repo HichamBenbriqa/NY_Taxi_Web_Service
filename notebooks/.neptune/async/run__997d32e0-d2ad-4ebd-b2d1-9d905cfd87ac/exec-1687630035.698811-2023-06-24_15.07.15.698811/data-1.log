@@ -1,0 +1,37 @@
+{"obj": {"type": "AssignString", "path": ["sys", "name"], "value": "Untitled"}, "version": 1}
+{"obj": {"type": "AssignString", "path": ["sys", "description"], "value": ""}, "version": 2}
+{"obj": {"type": "AssignString", "path": ["monitoring", "e854d864", "hostname"], "value": "hicham-AERO-5-KE"}, "version": 3}
+{"obj": {"type": "AssignString", "path": ["sys", "hostname"], "value": "hicham-AERO-5-KE"}, "version": 4}
+{"obj": {"type": "AssignString", "path": ["monitoring", "e854d864", "pid"], "value": "287293"}, "version": 5}
+{"obj": {"type": "AssignString", "path": ["monitoring", "e854d864", "tid"], "value": "140171499794432"}, "version": 6}
+{"obj": {"type": "AssignBool", "path": ["sys", "failed"], "value": false}, "version": 7}
+{"obj": {"type": "ConfigFloatSeries", "path": ["monitoring", "e854d864", "cpu"], "min": 0.0, "max": 100.0, "unit": "%"}, "version": 8}
+{"obj": {"type": "ClearFloatLog", "path": ["monitoring", "e854d864", "cpu"]}, "version": 9}
+{"obj": {"type": "ConfigFloatSeries", "path": ["monitoring", "e854d864", "memory"], "min": 0.0, "max": 15.355945587158203, "unit": "GB"}, "version": 10}
+{"obj": {"type": "ClearFloatLog", "path": ["monitoring", "e854d864", "memory"]}, "version": 11}
+{"obj": {"type": "ConfigFloatSeries", "path": ["monitoring", "e854d864", "gpu"], "min": 0.0, "max": 100.0, "unit": "%"}, "version": 12}
+{"obj": {"type": "ClearFloatLog", "path": ["monitoring", "e854d864", "gpu"]}, "version": 13}
+{"obj": {"type": "ConfigFloatSeries", "path": ["monitoring", "e854d864", "gpu_memory"], "min": 0.0, "max": 6.0, "unit": "GB"}, "version": 14}
+{"obj": {"type": "ClearFloatLog", "path": ["monitoring", "e854d864", "gpu_memory"]}, "version": 15}
+{"obj": {"type": "LogFloats", "path": ["monitoring", "e854d864", "cpu"], "values": [{"value": 4.6, "step": null, "ts": 1687630036.0478752}]}, "version": 16}
+{"obj": {"type": "LogFloats", "path": ["monitoring", "e854d864", "memory"], "values": [{"value": 4.957408905029297, "step": null, "ts": 1687630036.0478752}]}, "version": 17}
+{"obj": {"type": "LogFloats", "path": ["monitoring", "e854d864", "gpu"], "values": [{"value": 32.0, "step": null, "ts": 1687630036.0478752}]}, "version": 18}
+{"obj": {"type": "LogFloats", "path": ["monitoring", "e854d864", "gpu_memory"], "values": [{"value": 1.58282470703125, "step": null, "ts": 1687630036.0478752}]}, "version": 19}
+{"obj": {"type": "AddStrings", "path": ["sys", "tags"], "values": ["green"]}, "version": 20}
+{"obj": {"type": "AddStrings", "path": ["sys", "tags"], "values": ["2022"]}, "version": 21}
+{"obj": {"type": "AddStrings", "path": ["sys", "tags"], "values": ["3"]}, "version": 22}
+{"obj": {"type": "LogFloats", "path": ["monitoring", "e854d864", "cpu"], "values": [{"value": 6.2, "step": null, "ts": 1687630046.0503557}]}, "version": 23}
+{"obj": {"type": "LogFloats", "path": ["monitoring", "e854d864", "memory"], "values": [{"value": 5.1222991943359375, "step": null, "ts": 1687630046.0503557}]}, "version": 24}
+{"obj": {"type": "LogFloats", "path": ["monitoring", "e854d864", "gpu"], "values": [{"value": 4.0, "step": null, "ts": 1687630046.0503557}]}, "version": 25}
+{"obj": {"type": "LogFloats", "path": ["monitoring", "e854d864", "gpu_memory"], "values": [{"value": 1.59033203125, "step": null, "ts": 1687630046.0503557}]}, "version": 26}
+{"obj": {"type": "LogFloats", "path": ["monitoring", "e854d864", "cpu"], "values": [{"value": 4.7, "step": null, "ts": 1687630056.0518916}]}, "version": 27}
+{"obj": {"type": "LogFloats", "path": ["monitoring", "e854d864", "memory"], "values": [{"value": 5.154582977294922, "step": null, "ts": 1687630056.0518916}]}, "version": 28}
+{"obj": {"type": "LogFloats", "path": ["monitoring", "e854d864", "gpu"], "values": [{"value": 36.0, "step": null, "ts": 1687630056.0518916}]}, "version": 29}
+{"obj": {"type": "LogFloats", "path": ["monitoring", "e854d864", "gpu_memory"], "values": [{"value": 1.6412353515625, "step": null, "ts": 1687630056.0518916}]}, "version": 30}
+{"obj": {"type": "TrackFilesToArtifact", "path": ["datasets", "train"], "entries": [["../data/processed/train_green_2022-3.pkl", null]], "project_id": "83f2b23e-05a9-4912-8a06-ddf4777e4d54"}, "version": 31}
+{"obj": {"type": "TrackFilesToArtifact", "path": ["datasets", "test"], "entries": [["../data/processed/test_green_2022-2.pkl", null]], "project_id": "83f2b23e-05a9-4912-8a06-ddf4777e4d54"}, "version": 32}
+{"obj": {"type": "AssignInt", "path": ["parameters", "n_estimators"], "value": 100}, "version": 33}
+{"obj": {"type": "AssignInt", "path": ["parameters", "max_depth"], "value": 40}, "version": 34}
+{"obj": {"type": "LogFloats", "path": ["test", "rmse"], "values": [{"value": 5.866502986625277, "step": null, "ts": 1687630063.8939536}]}, "version": 35}
+{"obj": {"type": "UploadFile", "path": ["trained_pipelines", "pipeline"], "ext": "joblib", "file_path": "/home/hicham/Desktop/personal/mlops/models/pipeline.joblib", "tmp_file_name": null, "clean_after_upload": false}, "version": 36}
+{"obj": {"type": "AssignString", "path": ["source_code", "integrations", "neptune-optuna"], "value": "1.1.0"}, "version": 37}

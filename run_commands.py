@@ -1,6 +1,4 @@
-"""_summary_
-
-"""
+"""_summary_."""
 
 import argparse
 import sys
@@ -11,7 +9,7 @@ from src.utils.utils import get_config, get_previous_month
 
 
 def init_arg_parser():
-    """Initializes the argument parser
+    """Initialize the argument parser.
 
     :return: an ArgumentParser with its arguments loaded
     :rtype: argparse.ArgumentParser
