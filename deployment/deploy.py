@@ -192,7 +192,7 @@ class Deployer:
 
 
 if __name__ == "__main__":
-    sagemaker_client = boto3.client(service_name="sagemaker")
+    sagemaker_client = boto3.client(service_name="sagemaker", region_name=AWS_REGION)
     model_artifacts_tar = "model.tar.gz"
     boto_session = boto3.session.Session()
 
