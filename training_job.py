@@ -44,5 +44,5 @@ report = (
 print(report)
 
 # Write metrics to file
-with open("report.md", "w") as outfile:
+with open("latest_performance.md", "w") as outfile:
     outfile.write(report)
