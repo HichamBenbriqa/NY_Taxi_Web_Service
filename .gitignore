@@ -2,6 +2,9 @@
 models/
 data/
 .neptune
+deployment/predict.py
+deployment/test.py
+deployment/Dockerfile
 
 # By te-compiled / optimized / DLL files
 __pycache__/
@@ -25,6 +28,7 @@ wheels/
 share/python-wheels/
 *.egg-info/
 .installed.cfg
+.ruff_cache
 *.egg
 MANIFEST
 

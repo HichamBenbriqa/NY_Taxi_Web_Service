@@ -1,8 +1,0 @@
- Training Job Submission Report 
-
-Training Job parameters: {'n_estimators': 20, 'max_depth': 10}
-
-RMSE:
-
-8.701464219994499
-

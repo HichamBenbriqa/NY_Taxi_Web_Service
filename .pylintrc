@@ -1,7 +1,0 @@
-disable=
-    wrong-import-order
-    missing-final-newline
-    missing-class-docstring
-    missing-module-docstring
-    invalid-name
-    too-few-public-methods

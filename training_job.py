@@ -34,7 +34,7 @@ print(trainer.params, rmse)
 
 ## Save the pipeline
 trainer.save_pipeline()
-trainer.upload_to_neptune()
+trainer.upload_to_neptune(rmse)
 
 
 report = (
@@ -44,5 +44,5 @@ report = (
 print(report)
 
 # Write metrics to file
-with open("report.txt", "w") as outfile:
+with open("report.md", "w") as outfile:
     outfile.write(report)
