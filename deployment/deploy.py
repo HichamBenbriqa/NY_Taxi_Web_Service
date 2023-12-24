@@ -16,6 +16,7 @@ NPETUNE_API_TOKEN = os.getenv("NPETUNE_API_TOKEN")
 MODEL_ID = os.getenv("MODEL_ID")
 AWS_SAGEMAKER_ROLE = os.getenv("AWS_SAGEMAKER_ROLE")
 AWS_REGION = os.getenv("AWS_REGION")
+S3_BUCKET = os.getenv("S3_BUCKET")
 
 
 class Deployer:
@@ -62,12 +63,13 @@ class Deployer:
         """_summary_."""
         s3 = self.boto_session.resource("s3")
 
-        default_bucket = sagemaker.Session().default_bucket()
+        # default_bucket = sagemaker.Session().default_bucket()
 
-        model_artifacts = f"s3://{default_bucket}/{self.model_artifacts_tar}"
+        # model_artifacts = f"s3://{default_bucket}/{self.model_artifacts_tar}"
+        model_artifacts = f"s3://{S3_BUCKET}/{self.model_artifacts_tar}"
 
         response = s3.meta.client.upload_file(
-            self.model_artifacts_tar, default_bucket, self.model_artifacts_tar
+            self.model_artifacts_tar, S3_BUCKET, self.model_artifacts_tar
         )
         print(response)
         return model_artifacts
