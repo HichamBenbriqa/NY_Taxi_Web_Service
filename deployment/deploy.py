@@ -177,7 +177,7 @@ class Deployer:
 
     def infer(self, endpoint_name, test_sample):
         """_summary_."""
-        runtime_client = boto3.client("sagemaker-runtime")
+        runtime_client = boto3.client("sagemaker-runtime", region_name=AWS_REGION)
 
         content_type = "application/json"
         request_body = {"Input": test_sample}
@@ -194,7 +194,6 @@ class Deployer:
 
 
 if __name__ == "__main__":
-    print(AWS_REGION)
     sagemaker_client = boto3.client(service_name="sagemaker", region_name=AWS_REGION)
     model_artifacts_tar = "model.tar.gz"
     boto_session = boto3.session.Session()
