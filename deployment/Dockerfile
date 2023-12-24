@@ -25,5 +25,6 @@ FROM python:3.10.6-slim AS runtime
 WORKDIR /app
 COPY deployment/deploy.py /app/deploy.py
 COPY deployment/inference.py /app/inference.py
+COPY .env /app/.env
 COPY --from=builder /app/requirements.txt /app/requirements.txt
 RUN pip install --no-cache-dir -r /app/requirements.txt
