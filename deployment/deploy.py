@@ -193,6 +193,7 @@ class Deployer:
 
 if __name__ == "__main__":
     print(AWS_REGION)
+    print(os.getenv())
     sagemaker_client = boto3.client(service_name="sagemaker", region_name="us-east-1")
     model_artifacts_tar = "model.tar.gz"
     boto_session = boto3.session.Session()
