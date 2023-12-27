@@ -1,144 +1,84 @@
-.PHONY: clean data lint requirements sync_data_to_s3 sync_data_from_s3
-
-#################################################################################
-# GLOBALS                                                                       #
-#################################################################################
-
-PROJECT_DIR := $(shell dirname $(realpath $(lastword $(MAKEFILE_LIST))))
-BUCKET = [OPTIONAL] your-bucket-for-syncing-data (do not include 's3://')
-PROFILE = default
-PROJECT_NAME = mlops_zoom_camp
-PYTHON_INTERPRETER = python
-
-ifeq (,$(shell which conda))
-HAS_CONDA=False
-else
-HAS_CONDA=True
-endif
-
-#################################################################################
-# COMMANDS                                                                      #
-#################################################################################
-
-## Install Python Dependencies
-requirements: test_environment
-	$(PYTHON_INTERPRETER) -m pip install -U pip setuptools wheel
-	$(PYTHON_INTERPRETER) -m pip install -r requirements.txt
-
-## Make Dataset
-data: requirements
-	$(PYTHON_INTERPRETER) src/data/make_dataset.py data/raw data/processed
-
-## Delete all compiled Python files
-clean:
-	find . -type f -name "*.py[co]" -delete
-	find . -type d -name "__pycache__" -delete
-
-## Lint using flake8
-lint:
-	flake8 src
-
-## Upload Data to S3
-sync_data_to_s3:
-ifeq (default,$(PROFILE))
-	aws s3 sync data/ s3://$(BUCKET)/data/
-else
-	aws s3 sync data/ s3://$(BUCKET)/data/ --profile $(PROFILE)
-endif
-
-## Download Data from S3
-sync_data_from_s3:
-ifeq (default,$(PROFILE))
-	aws s3 sync s3://$(BUCKET)/data/ data/
-else
-	aws s3 sync s3://$(BUCKET)/data/ data/ --profile $(PROFILE)
-endif
-
-## Set up python interpreter environment
-create_environment:
-ifeq (True,$(HAS_CONDA))
-		@echo ">>> Detected conda, creating conda environment."
-ifeq (3,$(findstring 3,$(PYTHON_INTERPRETER)))
-	conda create --name $(PROJECT_NAME) python=3
-else
-	conda create --name $(PROJECT_NAME) python=2.7
-endif
-		@echo ">>> New conda env created. Activate with:\nsource activate $(PROJECT_NAME)"
-else
-	$(PYTHON_INTERPRETER) -m pip install -q virtualenv virtualenvwrapper
-	@echo ">>> Installing virtualenvwrapper if not already installed.\nMake sure the following lines are in shell startup file\n\
-	export WORKON_HOME=$$HOME/.virtualenvs\nexport PROJECT_HOME=$$HOME/Devel\nsource /usr/local/bin/virtualenvwrapper.sh\n"
-	@bash -c "source `which virtualenvwrapper.sh`;mkvirtualenv $(PROJECT_NAME) --python=$(PYTHON_INTERPRETER)"
-	@echo ">>> New virtualenv created. Activate with:\nworkon $(PROJECT_NAME)"
-endif
-
-## Test python environment is setup correctly
-test_environment:
-	$(PYTHON_INTERPRETER) test_environment.py
-
-#################################################################################
-# PROJECT RULES                                                                 #
-#################################################################################
-
-
-
-#################################################################################
-# Self Documenting Commands                                                     #
-#################################################################################
+NAME := ny-taxi-web-service
+INSTALL_STAMP := .install.stamp
+POETRY := $(shell command -v poetry 2> /dev/null)
 
 .DEFAULT_GOAL := help
 
-# Inspired by <http://marmelab.com/blog/2016/02/29/auto-documented-makefile.html>
-# sed script explained:
-# /^##/:
-# 	* save line in hold space
-# 	* purge line
-# 	* Loop:
-# 		* append newline + line to hold space
-# 		* go to next line
-# 		* if line starts with doc comment, strip comment character off and loop
-# 	* remove target prerequisites
-# 	* append hold space (+ newline) to line
-# 	* replace newline plus comments by `---`
-# 	* print line
-# Separate expressions are necessary because labels cannot be delimited by
-# semicolon; see <http://stackoverflow.com/a/11799865/1968>
 .PHONY: help
 help:
-	@echo "$$(tput bold)Available rules:$$(tput sgr0)"
-	@echo
-	@sed -n -e "/^## / { \
-		h; \
-		s/.*//; \
-		:doc" \
-		-e "H; \
-		n; \
-		s/^## //; \
-		t doc" \
-		-e "s/:.*//; \
-		G; \
-		s/\\n## /---/; \
-		s/\\n/ /g; \
-		p; \
-	}" ${MAKEFILE_LIST} \
-	| LC_ALL='C' sort --ignore-case \
-	| awk -F '---' \
-		-v ncol=$$(tput cols) \
-		-v indent=19 \
-		-v col_on="$$(tput setaf 6)" \
-		-v col_off="$$(tput sgr0)" \
-	'{ \
-		printf "%s%*s%s ", col_on, -indent, $$1, col_off; \
-		n = split($$2, words, " "); \
-		line_length = ncol - indent; \
-		for (i = 1; i <= n; i++) { \
-			line_length -= length(words[i]) + 1; \
-			if (line_length <= 0) { \
-				line_length = ncol - indent - length(words[i]) - 1; \
-				printf "\n%*s ", -indent, " "; \
-			} \
-			printf "%s ", words[i]; \
-		} \
-		printf "\n"; \
-	}' \
-	| more $(shell test $(shell uname) = Darwin && echo '--no-init --raw-control-chars')
+	@echo "Please use 'make <target>' where <target> is one of"
+	@echo ""
+	@echo " install: install packages and prepare environment"
+	@echo " clean: remove all temporary files"
+	@echo " lint: run the code linters"
+	@echo " format:	reformat code"
+	@echo " test: run all the tests"
+	@echo " pre-commit-install:	install pre-commit hooks"
+	@echo "  test-environment   test if the environment is set up correctly (Poetry and pre-commit)"
+	@echo ""
+	@echo "Check the Makefile to know exactly what each target is doing."
+
+.PHONY: pre-commit-install
+pre-commit-install:
+	@if [ -z "$(POETRY)" ]; then echo "Poetry could not be found. See https://python-poetry.org/docs/"; exit 2; fi
+	$(POETRY) run pre-commit install
+
+install: $(INSTALL_STAMP) pre-commit-install
+$(INSTALL_STAMP): pyproject.toml poetry.lock
+		@if [ -z $(POETRY) ]; then echo "Poetry could not be found. See https://python-poetry.org/docs/"; exit 2; fi
+		$(POETRY) install
+		touch $(INSTALL_STAMP)
+		$(POETRY) run pre-commit install
+
+.PHONY: lint
+lint: $(INSTALL_STAMP)
+		$(POETRY) run ruff check . --fix
+
+.PHONY: format
+format: $(INSTALL_STAMP)
+		$(POETRY) run ruff format .
+
+.PHONY: test
+test: $(INSTALL_STAMP)
+		$(POETRY) run pytest ./tests/
+
+.PHONY: clean
+clean:
+		find . -type d -name "__pycache__" | xargs rm -rf {};
+		rm -rf $(INSTALL_STAMP) .coverage .mypy_cache
+
+.PHONY: test-environment
+test-environment: test-python-version poetry-check pre-commit-check
+
+.PHONY: poetry-check
+poetry-check:
+	@echo "Checking if Poetry is installed..."
+	@if [ -z "$(POETRY)" ]; then \
+		echo "Poetry could not be found. See https://python-poetry.org/docs/"; \
+		exit 2; \
+	else \
+		echo "Poetry is installed: $(POETRY)"; \
+	fi
+
+.PHONY: pre-commit-check
+pre-commit-check:
+	@echo "Checking if pre-commit is installed..."
+	@if [ -z "$(shell command -v pre-commit 2> /dev/null)" ]; then \
+		echo "pre-commit is not installed. Please install it from https://pre-commit.com/"; \
+		exit 1; \
+	else \
+		echo "pre-commit is installed."; \
+	fi
+
+	@echo "Checking if pre-commit is configured..."
+	@if [ -f ".pre-commit-config.yaml" ]; then \
+		echo "pre-commit configuration file (.pre-commit-config.yaml) found."; \
+	else \
+		echo "pre-commit configuration file (.pre-commit-config.yaml) not found."; \
+	fi
+
+.PHONY: test-python-version
+test-python-version:
+	@echo "Testing Python version..."
+	@python -c "import sys; assert (3, 10) <= sys.version_info < (3, 13), 'Python 3.10 to 3.12 is required.'"
+	@echo "Python version is compatible."

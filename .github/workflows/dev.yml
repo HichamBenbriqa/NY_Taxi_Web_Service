@@ -28,8 +28,8 @@ jobs:
         ECR_REPOSITORY: ${{ secrets.REPO_NAME }}
         IMAGE_TAG: train-latest
       run: |
-        docker build -t $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG .
-        docker push $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG
+        docker build -t $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG -t $ECR_REGISTRY/$ECR_REPOSITORY:${{ github.sha }} .
+        docker push $ECR_REGISTRY/$ECR_REPOSITORY:${{ github.sha }}
 
   submit_training_job:
     needs: build_image_push_to_ECR
@@ -57,11 +57,12 @@ jobs:
         AWS_DEFAULT_REGION: ${{ secrets.AWS_DEFAULT_REGION }}
         ECR_REGISTRY: ${{ steps.login-ecr.outputs.registry }}
         ECR_REPOSITORY: ${{ secrets.REPO_NAME }}
-        IMAGE_TAG: train-latest
+        IMAGE_TAG: ${{ github.sha }}
         GITHUB_WORKSPACE: ${{ github.workspace }}
         repo_token: ${{ secrets.GITHUB_TOKEN }}
 
       run: |
-        docker run -e AWS_ACCESS_KEY_ID=$AWS_ACCESS_KEY_ID -e AWS_SECRET_ACCESS_KEY=$AWS_SECRET_ACCESS_KEY $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG python training_job.py
+        docker run -e AWS_ACCESS_KEY_ID=$AWS_ACCESS_KEY_ID -e AWS_SECRET_ACCESS_KEY=$AWS_SECRET_ACCESS_KEY $ECR_REGISTRY/$ECR_REPOSITORY:${{ github.sha }} python training_job.py
         docker cp $(docker ps -lq):/app/latest_performance.md $GITHUB_WORKSPACE/latest_performance.md
         cml-send-comment latest_performance.md
+        rm -f latest_performance.md

@@ -9,7 +9,7 @@ COPY pyproject.toml /app
 COPY poetry.lock /app
 
 RUN pip install poetry
-RUN poetry config virtualenvs.create false 
+RUN poetry config virtualenvs.create false
 RUN poetry install --no-root --without dev
 RUN poetry export -f requirements.txt >> requirements.txt
 

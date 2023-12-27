@@ -1,4 +1,5 @@
-"""_summary_."""
+"""Utility functions used throughout the project."""
+
 import logging
 import os
 from datetime import date
@@ -15,7 +16,20 @@ CONFIG_DIR = os.getenv("CONFIG_DIR")
 
 
 def get_config(config_path: str = CONFIG_DIR, config_type: str = "data"):
-    """Read the config file."""
+    """
+    Read the config file.
+
+    Args:
+        config_path (str): The path to the config directory. Defaults to CONFIG_DIR.
+        config_type (str): The type of config to read. Defaults to "data".
+
+    Returns:
+        tuple or dict: Depending on the config_type, returns a tuple or dictionary
+        containing the relevant configuration values.
+
+    Raises:
+        ValueError: If an invalid config_type is provided.
+    """
     config_file = f"{config_type}.yaml"
     with initialize(version_base=None, config_path=config_path):
         cfg = compose(config_name=config_file)
@@ -32,13 +46,15 @@ def get_config(config_path: str = CONFIG_DIR, config_type: str = "data"):
 
 
 def get_previous_month(year, month):
-    """Get the previous month and year from the given month and year.
+    """
+    Get the previous month given a year and month.
 
-    This method is used to get the test data for the model.
-    E.g. if the input month is 1 and input year is 2020,
-    the previous month is 12 and year is 2019.
-    The input month and year are the training data.
-    The previous month and year are the test data.
+    Args:
+        year (int): The year.
+        month (int): The month.
+
+    Returns:
+        tuple: A tuple containing the year and month of the previous month.
     """
     current_date = date(year, month, 1)
     month, year = (
@@ -51,12 +67,16 @@ def get_previous_month(year, month):
 
 
 def upload_file_to_s3(file_name, bucket, subfolder):
-    """Upload a file to an S3 bucket.
+    """
+    Upload a file to an S3 bucket.
 
-    :param file_name: File to upload
-    :param bucket: Bucket to upload to
-    :param object_name: S3 object name. If not specified then file_name is used
-    :return: True if file was uploaded, else False
+    Args:
+        file_name (str): The path of the file to be uploaded.
+        bucket (str): The name of the S3 bucket.
+        subfolder (str): The subfolder within the bucket to upload the file to.
+
+    Returns:
+        bool: True if the file was successfully uploaded, False otherwise.
     """
     # If S3 object_name was not specified, use file_name
     key = os.path.join("web-service", subfolder, os.path.basename(file_name))
