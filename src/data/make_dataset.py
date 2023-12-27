@@ -28,9 +28,12 @@ import os
 import pickle
 import sys
 
+import pandas as pd
+
 sys.path.insert(0, "../")
 from dotenv import load_dotenv  # noqa: E402
-from utils.utils import upload_file_to_s3  # noqa: E402
+
+from src.utils.utils import upload_file_to_s3  # noqa: E402
 
 load_dotenv()
 S3_BUCKET = os.getenv("S3_BUCKET")
@@ -111,6 +114,8 @@ class Data:
         the "raw" folder.
         It also uploads the raw data file to an S3 bucket.
         """
+        self.data_frame = pd.read_parquet(self.paths["file_url"])
+
         if not os.path.exists(os.path.join(DATA_ROOT_LOCAL_FOLDER, "raw")):
             os.makedirs(os.path.join(DATA_ROOT_LOCAL_FOLDER, "raw"))
 
