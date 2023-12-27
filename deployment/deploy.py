@@ -1,5 +1,6 @@
-"""_summary_."""
+"""The Deployer class creates a serverless SageMaker endpoint."""
 import json
+import logging
 import os
 import subprocess
 import time
@@ -20,16 +21,36 @@ S3_BUCKET = os.getenv("S3_BUCKET")
 
 
 class Deployer:
-    """summary."""
+    """
+    A class that handles the deployment of a machine learning model using AWS SageMaker.
+
+    Args:
+        sagemaker_client (boto3.client): The SageMaker client.
+        model_artifacts_tar (str): The path to the tar file containing the model
+        artifacts and inference code.
+        boto_session (boto3.session.Session): The Boto3 session.
+    """
 
     def __init__(self, sagemaker_client, model_artifacts_tar, boto_session):
-        """summary."""
+        """
+        Initialize the Deployer object.
+
+        Args:
+            sagemaker_client (SageMaker.Client): The SageMaker client object.
+            model_artifacts_tar (str): The path to the model artifacts tar file.
+            boto_session (boto3.Session): The Boto3 session object.
+        """
         self.sagemaker_client = sagemaker_client
         self.model_artifacts_tar = model_artifacts_tar
         self.boto_session = boto_session
 
     def get_production_ready_model(self):
-        """_summary_."""
+        """
+        Retrieve the production-ready model from Neptune and downloads it.
+
+        Returns
+            str: The ID of the downloaded model version.
+        """
         model = neptune.init_model(
             project=NEPTUNE_PROJECT, api_token=NPETUNE_API_TOKEN, with_id=MODEL_ID
         )
@@ -53,29 +74,41 @@ class Deployer:
         return version_id
 
     def model_2_tar(self):
-        """_summary_."""
+        """
+        Convert the model and inference code into a tar file.
+
+        Returns
+            None
+        """
         # Build tar file with model data + inference code
         bashCommand = f"tar -cvpzf {self.model_artifacts_tar} model.joblib inference.py"
         process = subprocess.Popen(bashCommand.split(), stdout=subprocess.PIPE)
         output, error = process.communicate()
 
     def upload_model_artifact_to_s3(self):
-        """_summary_."""
+        """
+        Upload the model artifact to an S3 bucket.
+
+        Returns
+            str: The S3 path of the uploaded model artifacts.
+        """
         s3 = self.boto_session.resource("s3")
 
-        # default_bucket = sagemaker.Session().default_bucket()
-
-        # model_artifacts = f"s3://{default_bucket}/{self.model_artifacts_tar}"
         model_artifacts = f"s3://{S3_BUCKET}/{self.model_artifacts_tar}"
 
         response = s3.meta.client.upload_file(
             self.model_artifacts_tar, S3_BUCKET, self.model_artifacts_tar
         )
-        print(response)
+        logging.info(response)
         return model_artifacts
 
     def get_sklearn_image(self):
-        """Retrieve sklearn image."""
+        """
+        Retrieve the image URI for the sklearn framework.
+
+        Returns
+            str: The image URI for the sklearn framework.
+        """
         image_uri = sagemaker.image_uris.retrieve(
             framework="sklearn",
             region=AWS_REGION,
@@ -86,7 +119,16 @@ class Deployer:
         return image_uri
 
     def create_model(self, model_artifacts, image_uri):
-        """_summary_."""
+        """
+        Create a SageMaker model using the provided model artifacts and image URI.
+
+        Args:
+            model_artifacts (str): The S3 location of the model artifacts.
+            image_uri (str): The URI of the Docker image containing the model.
+
+        Returns:
+            str: The name of the created model.
+        """
         client = self.sagemaker_client
 
         model_name = "NYCTAX-RFDV-38" + strftime("%Y-%m-%d-%H-%M-%S", gmtime())
@@ -105,12 +147,20 @@ class Deployer:
             ],
             ExecutionRoleArn=AWS_SAGEMAKER_ROLE,
         )
-        print("Model Arn: " + create_model_response["ModelArn"])
+        logging.info("Model Arn: " + create_model_response["ModelArn"])
 
         return model_name
 
     def create_endpoint_config(self, model_name):
-        """_summary_."""
+        """
+        Create an endpoint configuration for deploying a model.
+
+        Args:
+            model_name (str): The name of the model to be deployed.
+
+        Returns:
+            str: The name of the created endpoint configuration.
+        """
         client = self.sagemaker_client
 
         epc_name = "NYCTAX-RFDV-38-epc" + strftime("%Y-%m-%d-%H-%M-%S", gmtime())
@@ -130,7 +180,15 @@ class Deployer:
         return epc_name
 
     def create_endpoint(self, epc_name):
-        """_summary_."""
+        """
+        Create an endpoint for the NY Taxi Web Service.
+
+        Args:
+            epc_name (str): The name of the endpoint configuration.
+
+        Returns:
+            str: The name of the created endpoint.
+        """
         client = self.sagemaker_client
 
         endpoint_name = "NYCTAX-RFDV-38-ep" + strftime("%Y-%m-%d-%H-%M-%S", gmtime())
@@ -139,28 +197,41 @@ class Deployer:
             EndpointName=endpoint_name,
             EndpointConfigName=epc_name,
         )
-        print("Endpoint Arn: " + create_endpoint_response["EndpointArn"])
+        logging.info("Endpoint Arn: " + create_endpoint_response["EndpointArn"])
         return endpoint_name
 
     def deploy(self):
-        """_summary_."""
+        """
+        Deploy the model to the SageMaker endpoint.
+
+        Returns
+        - endpoint_name (str): The name of the deployed endpoint.
+        - model_version (str): The version of the deployed model.
+        """
+        # Get latest prod-ready model from neptune.ai
         model_version = self.get_production_ready_model()
 
+        # Convert model file and inference.py to .tar
         self.model_2_tar()
 
+        # Upload .tar file to S3
         model_artifacts = self.upload_model_artifact_to_s3()
-        print(f"model artifacts: {model_artifacts}")
+        logging.info(f"model artifacts: {model_artifacts}")
 
+        # Get appropriate sk-learn image
         image_uri = self.get_sklearn_image()
 
+        # Create model
         model_name = self.create_model(model_artifacts, image_uri)
-        print(f"model_name: {model_name}")
+        logging.info(f"model_name: {model_name}")
 
+        # Create endpoint configuration
         epc_name = self.create_endpoint_config(model_name)
-        print(f"epc_name: {epc_name}")
+        logging.info(f"epc_name: {epc_name}")
 
+        # Create endpoint
         endpoint_name = self.create_endpoint(epc_name)
-        print(f"endpoint_name: {endpoint_name}")
+        logging.info(f"endpoint_name: {endpoint_name}")
 
         describe_endpoint_response = self.sagemaker_client.describe_endpoint(
             EndpointName=endpoint_name
@@ -169,14 +240,24 @@ class Deployer:
             describe_endpoint_response = self.sagemaker_client.describe_endpoint(
                 EndpointName=endpoint_name
             )
-            print(describe_endpoint_response["EndpointStatus"])
+            logging.info(describe_endpoint_response["EndpointStatus"])
             time.sleep(30)
-        print(f"Model endpoint: {endpoint_name}")
+        logging.info(f"Model endpoint: {endpoint_name}")
 
         return endpoint_name, model_version
 
     def infer(self, endpoint_name, test_sample):
-        """_summary_."""
+        """
+        Perform inference using the specified endpoint and test sample.
+
+        Args:
+            endpoint_name (str): The name of the SageMaker endpoint to invoke.
+            test_sample (dict): The test sample to be used for inference.
+
+        Returns:
+            dict: The result of the inference.
+
+        """
         runtime_client = boto3.client("sagemaker-runtime", region_name=AWS_REGION)
 
         content_type = "application/json"

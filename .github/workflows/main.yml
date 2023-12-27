@@ -28,8 +28,8 @@ jobs:
         ECR_REPOSITORY: ${{ secrets.REPO_NAME }}
         IMAGE_TAG: deploy-latest
       run: |
-        docker build -t $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG -f deployment/Dockerfile .
-        docker push $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG
+        docker build -t $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG -t $ECR_REGISTRY/$ECR_REPOSITORY:${{ github.sha }} -f deployment/Dockerfile .
+        docker push $ECR_REGISTRY/$ECR_REPOSITORY:${{ github.sha }}
 
   submit_deploy_job:
     needs: build_deploy_image_push_to_ECR
@@ -62,6 +62,7 @@ jobs:
         repo_token: ${{ secrets.GITHUB_TOKEN }}
 
       run: |
-        docker run -e AWS_ACCESS_KEY_ID=$AWS_ACCESS_KEY_ID -e AWS_SECRET_ACCESS_KEY=$AWS_SECRET_ACCESS_KEY $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG python deploy.py
+        docker run -e AWS_ACCESS_KEY_ID=$AWS_ACCESS_KEY_ID -e AWS_SECRET_ACCESS_KEY=$AWS_SECRET_ACCESS_KEY $ECR_REGISTRY/$ECR_REPOSITORY:${{ github.sha }} python deploy.py
         docker cp $(docker ps -lq):/app/deploy-report.md $GITHUB_WORKSPACE/deploy-report.md
         cml-send-comment deploy-report.md
+        rm -f deploy-report.md

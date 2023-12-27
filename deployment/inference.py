@@ -12,7 +12,8 @@ def model_fn(model_dir):
 
 
 def input_fn(request_body, request_content_type):
-    """input_fn.
+    """
+    input_fn.
 
     request_body: The body of the request sent to the model.
     request_content_type: (string) specifies the format/variable type of the request
@@ -26,7 +27,8 @@ def input_fn(request_body, request_content_type):
 
 
 def predict_fn(input_data, model):
-    """predict_fn.
+    """
+    predict_fn.
 
     input_data: returned array from input_fn above
     model (sklearn model) returned model loaded from model_fn above
@@ -35,7 +37,8 @@ def predict_fn(input_data, model):
 
 
 def output_fn(prediction, content_type):
-    """output_fn.
+    """
+    output_fn.
 
     prediction: the returned value from predict_fn above
     content_type: the content type the endpoint expects to be returned. Ex: JSON, string
