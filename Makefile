@@ -23,7 +23,7 @@ pre-commit-install:
 	@if [ -z "$(POETRY)" ]; then echo "Poetry could not be found. See https://python-poetry.org/docs/"; exit 2; fi
 	$(POETRY) run pre-commit install
 
-install: $(INSTALL_STAMP) pre-commit-install
+install: $(INSTALL_STAMP) test-python-version pre-commit-install
 $(INSTALL_STAMP): pyproject.toml poetry.lock
 		@if [ -z $(POETRY) ]; then echo "Poetry could not be found. See https://python-poetry.org/docs/"; exit 2; fi
 		$(POETRY) install

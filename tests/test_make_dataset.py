@@ -6,10 +6,9 @@ import numpy as np
 import pandas as pd
 import pytest
 
-sys.path.insert(0, "../src")
+sys.path.append("src/data")
 from dotenv import load_dotenv  # noqa: E402
-
-from data.make_dataset import Data  # noqa: E402
+from make_dataset import Data  # noqa: E402
 
 load_dotenv()
 DATA_ROOT_LOCAL_FOLDER = os.getenv("DATA_ROOT_LOCAL_FOLDER")

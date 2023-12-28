@@ -1,8 +1,8 @@
 """Test cases for the utils.py file."""
 import sys
 
-sys.path.insert(0, "../")
-from src.utils import utils  # noqa: E402
+sys.path.append("src/utils")
+import utils  # noqa: E402
 
 
 def test_get_config_data():
