@@ -1,5 +1,5 @@
 #
-# Build image
+# Build image: get requirements.txt from the the pyproject.toml file.
 #
 
 FROM python:3.10.6-slim AS builder
