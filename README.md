@@ -1,6 +1,9 @@
 # NY_Taxi_Web_Service
 
 This project implements training and deployment pipelines on the open NY Green Taxi dataset: https://www.nyc.gov/site/tlc/businesses/green-cab.page. The project uses various tools and libraries, namely Github Actions, AWS (ECR, SageMaker and S3) and Neptune.ai.
+
+The following diagram explains the CI/CD pipelines implemented using Github Actions:
+
 ![Untitled Diagram drawio(1)](https://github.com/HichamBenbriqa/NY_Taxi_Web_Service/assets/50951611/be7d8649-3287-4f31-8b0f-61d42de715f1)
 
 ## Getting started
