@@ -39,7 +39,7 @@ make install
 
 ## More on the project
 
-The is an educational project whose aim is to automate training and deployment pipelines of ML models.
+The is an sample project whose aim is to automate training and deployment pipelines of ML models.
 
 ### Training pipeline:
 
